@@ -35,6 +35,6 @@ jobs:
           server-password: GITHUB_TOKEN
 
       - name: Deploy to GitHub Packages (root reactor)
-        run: mvn clean install -DskipTests
+        run: mvn -U clean install -DskipTests
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
