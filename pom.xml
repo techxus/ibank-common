@@ -1,10 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  Root aggregator POM:
-  - NO dependencies here
-  - NO plugins here
-  - Only declares modules so `mvn install` / `mvn deploy` builds everything
--->
+<!-- Root aggregator + version root -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -12,9 +7,8 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.ibank</groupId>
     <artifactId>ibank-common</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <packaging>pom</packaging>
-
     <name>ibank-common</name>
     <description>Root multi-module aggregator for ibank shared artifacts</description>
 
@@ -24,14 +18,7 @@
         <module>ibank-starter</module>
     </modules>
 
-    <distributionManagement>
-        <repository>
-            <id>github</id>
-            <name>GitHub Packages</name>
-            <url>https://maven.pkg.github.com/techxus/ibank-common</url>
-        </repository>
-    </distributionManagement>
-
+    <!-- ✅ Aggregator itself should not be deployed -->
     <build>
         <pluginManagement>
             <plugins>
@@ -45,5 +32,4 @@
             </plugins>
         </pluginManagement>
     </build>
-
 </project>
