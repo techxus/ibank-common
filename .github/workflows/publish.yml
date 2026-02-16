@@ -18,13 +18,14 @@ permissions:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
 
     steps:
-      # ✅ You are already inside the repo that triggered the workflow
       - name: Checkout
         uses: actions/checkout@v4
 
-      # ✅ Creates ~/.m2/settings.xml with credentials for server-id "github"
       - name: Set up JDK 17 (with Maven auth for GitHub Packages)
         uses: actions/setup-java@v4
         with:
@@ -35,9 +36,7 @@ jobs:
           server-username: GITHUB_ACTOR
           server-password: GITHUB_TOKEN
 
-      # ✅ Deploy all modules from the aggregator/root pom
       - name: Deploy to GitHub Packages
         run: mvn -B -U -DskipTests deploy
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
