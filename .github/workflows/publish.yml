@@ -36,6 +36,28 @@ jobs:
           server-username: GITHUB_ACTOR
           server-password: GITHUB_TOKEN
 
+      - name: Delete existing Maven package version (if exists)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          VERSION="1.0.4"
+          OWNER="techxus"
+          PACKAGE="ibank-parent"
+
+          # list versions, find matching ID, delete it
+          ID=$(gh api -H "Accept: application/vnd.github+json" \
+            /orgs/$OWNER/packages/maven/$PACKAGE/versions \
+            --jq ".[] | select(.name==\"$VERSION\") | .id" | head -n 1)
+
+          if [ -n "$ID" ]; then
+            echo "Deleting $PACKAGE version $VERSION (id=$ID)"
+            gh api -X DELETE -H "Accept: application/vnd.github+json" \
+              /orgs/$OWNER/packages/maven/$PACKAGE/versions/$ID
+          else
+            echo "No existing version to delete."
+          fi
+
+
       - name: Deploy to GitHub Packages
         run: mvn -B -U -DskipTests deploy
         env:
