@@ -2,77 +2,55 @@
 <!--
   ibank-parent
   ============================================================
-  PURPOSE
-  ============================================================
   Shared Maven parent for ALL ibank microservices.
 
   Provides:
-  - Centralized dependency versions (dependencyManagement)
+  - Centralized dependency versions for non-Spring libs (dependencyManagement)
   - Centralized plugin configuration (pluginManagement)
   - Java version standardization
-  - Spring Boot BOM import (correct Maven pattern when a custom parent is used)
   - Shared repositories (Splunk)
   - GitHub Packages deployment target
-
-  VERSIONING STRATEGY
-  ============================================================
-  Version is inherited from ROOT aggregator: ibank-common.
-  → To bump ALL module versions, change ONLY:
-        ibank-common/pom.xml <version>
 -->
-
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
 
-    <!-- ===================================================== -->
-    <!-- Inherit VERSION from ibank-common (single source)     -->
-    <!-- ===================================================== -->
+    <!-- ✅ Spring Boot parent: brings Spring dependency BOM + sensible defaults -->
     <parent>
-        <groupId>com.ibank</groupId>
-        <artifactId>ibank-common</artifactId>
-        <version>1.0.2</version>
-        <relativePath>../pom.xml</relativePath>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.3.1</version>
+        <relativePath/>
     </parent>
 
+    <groupId>com.ibank</groupId>
     <artifactId>ibank-parent</artifactId>
+    <version>1.0.3</version>
     <packaging>pom</packaging>
     <name>ibank-parent</name>
-    <description>Shared parent POM for ibank services (versions, plugins, BOM)</description>
+    <description>Shared parent POM for ibank services (versions + plugins)</description>
 
     <!-- ===================================================== -->
-    <!-- Shared repositories inherited by ALL modules/services -->
+    <!-- Shared repositories (only needed if artifacts are NOT on Maven Central) -->
     <!-- ===================================================== -->
     <repositories>
-        <!-- Splunk artifacts repository -->
+        <!-- Splunk artifacts repository (for Splunk logging library) -->
         <repository>
             <id>splunk-artifactory</id>
             <url>https://splunk.jfrog.io/splunk/ext-releases-local/</url>
         </repository>
     </repositories>
 
-    <!-- Optional but safe: plugin repo mirror -->
-    <pluginRepositories>
-        <pluginRepository>
-            <id>splunk-artifactory</id>
-            <url>https://splunk.jfrog.io/splunk/ext-releases-local/</url>
-        </pluginRepository>
-    </pluginRepositories>
-
     <!-- ===================================================== -->
     <!-- Global properties used across ALL modules/services    -->
     <!-- ===================================================== -->
     <properties>
-
         <!-- Java baseline -->
         <java.version>17</java.version>
 
-        <!-- Spring Boot BOM version -->
-        <spring-boot.version>3.3.1</spring-boot.version>
-
-        <!-- Common library versions -->
+        <!-- Common library versions NOT managed by Spring Boot -->
         <lombok.version>1.18.32</lombok.version>
         <splunk.version>1.11.8</splunk.version>
         <aws.msk.iam.version>2.0.3</aws.msk.iam.version>
@@ -83,18 +61,10 @@
 
     <!-- ===================================================== -->
     <!-- Centralized dependency version management             -->
+    <!-- (Only for libs not already managed by Spring Boot BOM) -->
     <!-- ===================================================== -->
     <dependencyManagement>
         <dependencies>
-
-            <!-- Spring Boot BOM (replaces spring-boot-starter-parent) -->
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-dependencies</artifactId>
-                <version>${spring-boot.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
 
             <!-- Lombok (compile-time only) -->
             <dependency>
@@ -111,7 +81,7 @@
                 <version>${splunk.version}</version>
             </dependency>
 
-            <!-- AWS MSK IAM authentication -->
+            <!-- AWS MSK IAM authentication (not part of Spring Boot BOM) -->
             <dependency>
                 <groupId>software.amazon.msk</groupId>
                 <artifactId>aws-msk-iam-auth</artifactId>
@@ -137,7 +107,7 @@
                         <source>${java.version}</source>
                         <target>${java.version}</target>
 
-                        <!-- Enable Lombok annotation processing -->
+                        <!-- Lombok annotation processing -->
                         <annotationProcessorPaths>
                             <path>
                                 <groupId>org.projectlombok</groupId>
