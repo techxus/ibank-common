@@ -51,4 +51,8 @@ secrets/
 *.tmp
 *.swp
 *.swo
+
+# JARs
 *.jar
+*.war
+*.ear
