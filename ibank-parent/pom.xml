@@ -16,7 +16,7 @@
 
     <groupId>com.ibank</groupId>
     <artifactId>ibank-parent</artifactId>
-    <version>1.0.18</version>
+    <version>1.0.19</version>
     <packaging>pom</packaging>
     <name>ibank-parent</name>
     <description>Importable BOM for ibank services (versions + plugins)</description>
