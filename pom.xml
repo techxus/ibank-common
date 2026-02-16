@@ -18,6 +18,19 @@
         <module>ibank-starter</module>
     </modules>
 
+    <repositories>
+        <repository>
+            <id>splunk-artifactory</id>
+            <url>https://splunk.jfrog.io/splunk/ext-releases-local/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
     <build>
         <plugins>
             <plugin>
