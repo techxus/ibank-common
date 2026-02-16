@@ -11,6 +11,9 @@ out/
 # IntelliJ Maven/Gradle caches
 .idea_modules/
 
+# Spring Initializr junk docs
+HELP.md
+
 # ===== Maven =====
 target/
 **/target/
