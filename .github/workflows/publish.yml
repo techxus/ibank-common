@@ -2,13 +2,14 @@ name: Publish Maven packages (GitHub Packages)
 
 on:
   push:
-    branches: [ "master" ]
+    branches: ["master"]
     paths:
       - "**/pom.xml"
       - "ibank-parent/**"
       - "ibank-model/**"
       - "ibank-starter/**"
       - ".github/workflows/publish.yml"
+
   workflow_dispatch:
 
 permissions:
@@ -18,15 +19,12 @@ permissions:
 jobs:
   publish:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up JDK 17 (with Maven auth for GitHub Packages)
+      - name: Set up JDK 17 (GitHub Packages auth included)
         uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -35,28 +33,6 @@ jobs:
           server-id: github
           server-username: GITHUB_ACTOR
           server-password: GITHUB_TOKEN
-
-      - name: Delete existing Maven package version (if exists)
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          VERSION="1.0.4"
-          OWNER="techxus"
-          PACKAGE="ibank-parent"
-
-          # list versions, find matching ID, delete it
-          ID=$(gh api -H "Accept: application/vnd.github+json" \
-            /orgs/$OWNER/packages/maven/$PACKAGE/versions \
-            --jq ".[] | select(.name==\"$VERSION\") | .id" | head -n 1)
-
-          if [ -n "$ID" ]; then
-            echo "Deleting $PACKAGE version $VERSION (id=$ID)"
-            gh api -X DELETE -H "Accept: application/vnd.github+json" \
-              /orgs/$OWNER/packages/maven/$PACKAGE/versions/$ID
-          else
-            echo "No existing version to delete."
-          fi
-
 
       - name: Deploy to GitHub Packages
         run: mvn -B -U -DskipTests deploy
