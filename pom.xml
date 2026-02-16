@@ -1,18 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Root parent + aggregator for ibank shared artifacts -->
+<!-- Root aggregator + single version source (revision) -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-
-    <!-- ✅ Spring Boot parent for the whole reactor -->
-    <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.3.1</version>
-        <relativePath/>
-    </parent>
 
     <groupId>com.ibank</groupId>
     <artifactId>ibank-common</artifactId>
@@ -20,7 +12,7 @@
     <packaging>pom</packaging>
 
     <name>ibank-common</name>
-    <description>Root multi-module parent + aggregator for ibank shared artifacts</description>
+    <description>Root multi-module aggregator for ibank shared artifacts</description>
 
     <modules>
         <module>ibank-parent</module>
@@ -36,39 +28,21 @@
     </repositories>
 
     <properties>
-        <!-- ✅ Change ONLY this to release 1.0.6, 1.0.7, ... -->
-        <revision>1.0.8</revision>
-
-        <!-- Java baseline -->
+        <!-- ✅ Change ONLY this line for new release: 1.0.10, 1.0.11, ... -->
+        <revision>1.0.10</revision>
         <java.version>17</java.version>
-
-        <!-- Versions NOT managed by Spring Boot BOM -->
         <lombok.version>1.18.32</lombok.version>
         <splunk.version>1.11.8</splunk.version>
         <aws.msk.iam.version>2.0.3</aws.msk.iam.version>
 
-        <!-- Plugin versions -->
         <maven.compiler.plugin.version>3.11.0</maven.compiler.plugin.version>
+        <flatten.maven.plugin.version>1.6.0</flatten.maven.plugin.version>
     </properties>
 
-    <!-- ✅ Centralized versions for ALL modules (fixes your Splunk missing version error) -->
+    <!-- ✅ Versions shared across the reactor -->
     <dependencyManagement>
         <dependencies>
 
-            <!-- ibank shared modules -->
-            <dependency>
-                <groupId>com.ibank</groupId>
-                <artifactId>ibank-starter</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.ibank</groupId>
-                <artifactId>ibank-model</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <!-- Lombok -->
             <dependency>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
@@ -76,14 +50,12 @@
                 <scope>provided</scope>
             </dependency>
 
-            <!-- Splunk logging -->
             <dependency>
                 <groupId>com.splunk.logging</groupId>
                 <artifactId>splunk-library-javalogging</artifactId>
                 <version>${splunk.version}</version>
             </dependency>
 
-            <!-- AWS MSK IAM -->
             <dependency>
                 <groupId>software.amazon.msk</groupId>
                 <artifactId>aws-msk-iam-auth</artifactId>
@@ -93,7 +65,6 @@
         </dependencies>
     </dependencyManagement>
 
-    <!-- ✅ Centralized plugins -->
     <build>
         <pluginManagement>
             <plugins>
@@ -103,8 +74,7 @@
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>${maven.compiler.plugin.version}</version>
                     <configuration>
-                        <source>${java.version}</source>
-                        <target>${java.version}</target>
+                        <release>${java.version}</release>
                         <annotationProcessorPaths>
                             <path>
                                 <groupId>org.projectlombok</groupId>
@@ -115,22 +85,55 @@
                     </configuration>
                 </plugin>
 
+                <!-- ✅ CRITICAL: publish flattened POMs so ${revision} is resolved for consumers -->
                 <plugin>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>flatten-maven-plugin</artifactId>
+                    <version>${flatten.maven.plugin.version}</version>
+                    <configuration>
+                        <!-- resolves ${revision}, ${sha1}, ${changelist} -->
+                        <flattenMode>resolveCiFriendliesOnly</flattenMode>
+                        <updatePomFile>true</updatePomFile>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>flatten</id>
+                            <phase>process-resources</phase>
+                            <goals>
+                                <goal>flatten</goal>
+                            </goals>
+                        </execution>
+                        <execution>
+                            <id>flatten-clean</id>
+                            <phase>clean</phase>
+                            <goals>
+                                <goal>clean</goal>
+                            </goals>
+                        </execution>
+                    </executions>
                 </plugin>
 
             </plugins>
         </pluginManagement>
-    </build>
 
-    <!-- ✅ GitHub Packages deploy target (inherited by children) -->
-    <distributionManagement>
-        <repository>
-            <id>github</id>
-            <name>GitHub Packages</name>
-            <url>https://maven.pkg.github.com/techxus/ibank-common</url>
-        </repository>
-    </distributionManagement>
+        <!-- Make sure flatten runs even if modules don't declare it explicitly -->
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>flatten-maven-plugin</artifactId>
+            </plugin>
+
+            <!-- Skip deploy ONLY for this aggregator -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>3.1.2</version>
+                <inherited>false</inherited>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>

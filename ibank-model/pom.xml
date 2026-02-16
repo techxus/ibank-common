@@ -7,13 +7,16 @@
 
     <parent>
         <groupId>com.ibank</groupId>
-        <artifactId>ibank-common</artifactId>
+        <artifactId>ibank-parent</artifactId>
         <version>${revision}</version>
-        <relativePath>../pom.xml</relativePath>
+        <relativePath>../ibank-parent/pom.xml</relativePath>
     </parent>
 
+    <groupId>com.ibank</groupId>
     <artifactId>ibank-model</artifactId>
+    <version>${revision}</version>
     <packaging>jar</packaging>
+
     <name>ibank-model</name>
     <description>Shared models for ibank services (DTOs/events/enums/errors)</description>
 
