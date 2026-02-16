@@ -9,6 +9,7 @@
     <artifactId>ibank-common</artifactId>
     <version>1.0.2</version>
     <packaging>pom</packaging>
+
     <name>ibank-common</name>
     <description>Root multi-module aggregator for ibank shared artifacts</description>
 
@@ -18,16 +19,18 @@
         <module>ibank-starter</module>
     </modules>
 
-    <!-- ✅ Skip deploy ONLY for this aggregator POM (NOT inherited) -->
+    <!-- ✅ Skip deploy ONLY for this aggregator POM (DO NOT inherit to children) -->
     <build>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-deploy-plugin</artifactId>
+                <inherited>false</inherited>
                 <configuration>
                     <skip>true</skip>
                 </configuration>
             </plugin>
         </plugins>
     </build>
+
 </project>
