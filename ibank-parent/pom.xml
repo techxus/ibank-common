@@ -1,23 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  ibank-parent
-  ============================================================
-  Shared Maven parent for ALL ibank microservices.
-
-  Provides:
-  - Centralized dependency versions for non-Spring libs (dependencyManagement)
-  - Centralized plugin configuration (pluginManagement)
-  - Java version standardization
-  - Shared repositories (Splunk)
-  - GitHub Packages deployment target
--->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
 
-    <!-- ✅ Spring Boot parent: brings Spring dependency BOM + sensible defaults -->
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
@@ -27,46 +14,52 @@
 
     <groupId>com.ibank</groupId>
     <artifactId>ibank-parent</artifactId>
-    <version>1.0.3</version>
+    <version>1.0.4</version>
     <packaging>pom</packaging>
     <name>ibank-parent</name>
     <description>Shared parent POM for ibank services (versions + plugins)</description>
 
-    <!-- ===================================================== -->
-    <!-- Shared repositories (only needed if artifacts are NOT on Maven Central) -->
-    <!-- ===================================================== -->
     <repositories>
-        <!-- Splunk artifacts repository (for Splunk logging library) -->
         <repository>
             <id>splunk-artifactory</id>
             <url>https://splunk.jfrog.io/splunk/ext-releases-local/</url>
         </repository>
+
+        <repository>
+            <id>github</id>
+            <url>https://maven.pkg.github.com/techxus/ibank-common</url>
+            <releases><enabled>true</enabled></releases>
+            <snapshots><enabled>true</enabled></snapshots>
+        </repository>
     </repositories>
 
-    <!-- ===================================================== -->
-    <!-- Global properties used across ALL modules/services    -->
-    <!-- ===================================================== -->
     <properties>
-        <!-- Java baseline -->
         <java.version>17</java.version>
 
-        <!-- Common library versions NOT managed by Spring Boot -->
         <lombok.version>1.18.32</lombok.version>
         <splunk.version>1.11.8</splunk.version>
         <aws.msk.iam.version>2.0.3</aws.msk.iam.version>
 
-        <!-- Maven plugin versions -->
         <maven.compiler.plugin.version>3.11.0</maven.compiler.plugin.version>
     </properties>
 
-    <!-- ===================================================== -->
-    <!-- Centralized dependency version management             -->
-    <!-- (Only for libs not already managed by Spring Boot BOM) -->
-    <!-- ===================================================== -->
     <dependencyManagement>
         <dependencies>
 
-            <!-- Lombok (compile-time only) -->
+            <!-- ✅ ibank shared modules: always same version as the parent -->
+            <dependency>
+                <groupId>com.ibank</groupId>
+                <artifactId>ibank-starter</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.ibank</groupId>
+                <artifactId>ibank-model</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <!-- Lombok -->
             <dependency>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
@@ -81,7 +74,7 @@
                 <version>${splunk.version}</version>
             </dependency>
 
-            <!-- AWS MSK IAM authentication (not part of Spring Boot BOM) -->
+            <!-- AWS MSK IAM authentication -->
             <dependency>
                 <groupId>software.amazon.msk</groupId>
                 <artifactId>aws-msk-iam-auth</artifactId>
@@ -91,14 +84,10 @@
         </dependencies>
     </dependencyManagement>
 
-    <!-- ===================================================== -->
-    <!-- Centralized Maven plugin configuration                -->
-    <!-- ===================================================== -->
     <build>
         <pluginManagement>
             <plugins>
 
-                <!-- Java compiler config shared by ALL modules -->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
@@ -106,8 +95,6 @@
                     <configuration>
                         <source>${java.version}</source>
                         <target>${java.version}</target>
-
-                        <!-- Lombok annotation processing -->
                         <annotationProcessorPaths>
                             <path>
                                 <groupId>org.projectlombok</groupId>
@@ -118,7 +105,6 @@
                     </configuration>
                 </plugin>
 
-                <!-- Spring Boot executable JAR packaging -->
                 <plugin>
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-maven-plugin</artifactId>
@@ -128,9 +114,6 @@
         </pluginManagement>
     </build>
 
-    <!-- ===================================================== -->
-    <!-- GitHub Packages deployment target                     -->
-    <!-- ===================================================== -->
     <distributionManagement>
         <repository>
             <id>github</id>
