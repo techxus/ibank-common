@@ -1,0 +1,53 @@
+# ===== OS =====
+.DS_Store
+Thumbs.db
+
+# ===== IntelliJ / JetBrains =====
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+# IntelliJ Maven/Gradle caches
+.idea_modules/
+
+# ===== Maven =====
+target/
+**/target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+
+# ===== Logs =====
+*.log
+logs/
+**/logs/
+
+# ===== Env / Secrets (never commit) =====
+.env
+.env.*
+*.pem
+*.key
+*.p12
+*.jks
+*.keystore
+secrets/
+**/secrets/
+
+# ===== Coverage / Reports =====
+/coverage/
+**/coverage/
+*.exec
+*.ec
+**/surefire-reports/
+**/failsafe-reports/
+
+# ===== Misc =====
+*.tmp
+*.swp
+*.swo

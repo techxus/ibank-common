@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Root aggregator POM:
+  - NO dependencies here
+  - NO plugins here
+  - Only declares modules so `mvn install` builds everything
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.ibank</groupId>
+    <artifactId>ibank-common</artifactId>
+    <version>1.0.0</version>
+    <packaging>pom</packaging>
+    <name>ibank-common</name>
+    <description>Root multi-module aggregator for ibank shared artifacts</description>
+
+    <modules>
+        <module>ibank-parent</module>
+        <module>ibank-model</module>
+        <module>ibank-starter</module>
+    </modules>
+</project>

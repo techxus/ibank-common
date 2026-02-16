@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ibank-parent:
+  - Standardizes versions (dependencyManagement) and build plugins (pluginManagement)
+  - Services use this as <parent> so they stop duplicating plugin + version blocks
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.ibank</groupId>
+    <artifactId>ibank-parent</artifactId>
+    <version>1.0.0</version>
+    <packaging>pom</packaging>
+    <name>ibank-parent</name>
+    <description>Shared parent POM for ibank services (versions + plugins)</description>
+
+    <!-- Spring Boot BOM parent (controls most Spring dependency versions) -->
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.3.1</version>
+        <relativePath/>
+    </parent>
+
+    <properties>
+        <!-- Java baseline across all services/modules -->
+        <java.version>17</java.version>
+
+        <!-- Lombok for compile-time code generation in each module that uses it -->
+        <lombok.version>1.18.32</lombok.version>
+
+        <!-- Splunk logging library version (runtime usage in starter/services) -->
+        <splunk.version>1.11.8</splunk.version>
+
+        <!-- MSK IAM auth library version (used by services that talk to MSK with IAM) -->
+        <aws.msk.iam.version>2.0.3</aws.msk.iam.version>
+    </properties>
+
+    <repositories>
+        <!-- Splunk artifacts repository (shared for all builds) -->
+        <repository>
+            <id>splunk-artifactory</id>
+            <url>https://splunk.jfrog.io/splunk/ext-releases-local/</url>
+        </repository>
+    </repositories>
+
+    <dependencyManagement>
+        <dependencies>
+
+            <!-- Lombok version pinned (services still declare Lombok as provided) -->
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
+                <scope>provided</scope>
+            </dependency>
+
+            <!-- Splunk Java logging library version pinned (runtime) -->
+            <dependency>
+                <groupId>com.splunk.logging</groupId>
+                <artifactId>splunk-library-javalogging</artifactId>
+                <version>${splunk.version}</version>
+            </dependency>
+
+            <!-- AWS MSK IAM auth library version pinned (runtime) -->
+            <dependency>
+                <groupId>software.amazon.msk</groupId>
+                <artifactId>aws-msk-iam-auth</artifactId>
+                <version>${aws.msk.iam.version}</version>
+            </dependency>
+
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+
+                <!-- Compiler settings centralized (Java 17 + Lombok annotation processing) -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.11.0</version>
+                    <configuration>
+                        <source>${java.version}</source>
+                        <target>${java.version}</target>
+                        <annotationProcessorPaths>
+                            <!-- Lombok annotation processor -->
+                            <path>
+                                <groupId>org.projectlombok</groupId>
+                                <artifactId>lombok</artifactId>
+                                <version>${lombok.version}</version>
+                            </path>
+                        </annotationProcessorPaths>
+                    </configuration>
+                </plugin>
+
+                <!-- Spring Boot packaging plugin (services can declare it, config is shared) -->
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                </plugin>
+
+            </plugins>
+        </pluginManagement>
+    </build>
+</project>
