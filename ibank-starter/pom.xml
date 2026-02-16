@@ -16,7 +16,6 @@
     <artifactId>ibank-starter</artifactId>
     <version>${revision}</version>
     <packaging>jar</packaging>
-
     <name>ibank-starter</name>
     <description>Shared starter for ibank services (common runtime deps + shared config)</description>
 

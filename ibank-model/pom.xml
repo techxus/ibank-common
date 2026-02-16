@@ -16,7 +16,6 @@
     <artifactId>ibank-model</artifactId>
     <version>${revision}</version>
     <packaging>jar</packaging>
-
     <name>ibank-model</name>
     <description>Shared models for ibank services (DTOs/events/enums/errors)</description>
 
