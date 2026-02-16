@@ -1,16 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Root aggregator + version root -->
+<!-- Root aggregator + single-version root -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
+
+    <!-- ✅ One Spring Boot parent for the whole reactor -->
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.3.1</version>
+        <relativePath/>
+    </parent>
+
     <groupId>com.ibank</groupId>
     <artifactId>ibank-common</artifactId>
-    <version>1.0.5</version>
+    <version>${revision}</version>
     <packaging>pom</packaging>
     <name>ibank-common</name>
     <description>Root multi-module aggregator for ibank shared artifacts</description>
+
+    <properties>
+        <!-- ✅ Change ONLY this to release 1.0.6, 1.0.7, ... -->
+        <revision>1.0.6</revision>
+        <java.version>17</java.version>
+        <lombok.version>1.18.32</lombok.version>
+        <splunk.version>1.11.8</splunk.version>
+        <aws.msk.iam.version>2.0.3</aws.msk.iam.version>
+
+        <maven.compiler.plugin.version>3.11.0</maven.compiler.plugin.version>
+    </properties>
 
     <modules>
         <module>ibank-parent</module>
@@ -18,7 +38,7 @@
         <module>ibank-starter</module>
     </modules>
 
-    <!-- ✅ Skip deploy ONLY for this aggregator POM (DO NOT inherit to children) -->
+    <!-- ✅ Skip deploy ONLY for this aggregator POM -->
     <build>
         <plugins>
             <plugin>

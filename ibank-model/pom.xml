@@ -7,9 +7,9 @@
 
     <parent>
         <groupId>com.ibank</groupId>
-        <artifactId>ibank-parent</artifactId>
-        <version>1.0.5</version>
-        <relativePath>../ibank-parent/pom.xml</relativePath>
+        <artifactId>ibank-common</artifactId>
+        <version>${revision}</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>ibank-model</artifactId>
