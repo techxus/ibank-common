@@ -3,8 +3,6 @@ name: Publish Maven packages (GitHub Packages)
 on:
   push:
     branches: [ "master" ]
-
-    # publish when you change any pom or module source/config
     paths:
       - "**/pom.xml"
       - "ibank-parent/**"
@@ -22,42 +20,24 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # ✅ You are already inside the repo that triggered the workflow
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up Java 17
+      # ✅ Creates ~/.m2/settings.xml with credentials for server-id "github"
+      - name: Set up JDK 17 (with Maven auth for GitHub Packages)
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: "17"
           cache: maven
+          server-id: github
+          server-username: GITHUB_ACTOR
+          server-password: GITHUB_TOKEN
 
-      - name: Configure Maven settings for GitHub Packages
-        run: |
-          mkdir -p ~/.m2
-          cat > ~/.m2/settings.xml << 'EOF'
-          <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
-                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                    xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 https://maven.apache.org/xsd/settings-1.0.0.xsd">
-
-            <servers>
-              <!-- Used for deploying to GitHub Packages -->
-              <server>
-                <id>github</id>
-                <username>${env.GH_PACKAGES_USERNAME}</username>
-                <password>${env.GH_PACKAGES_TOKEN}</password>
-              </server>
-            </servers>
-
-          </settings>
-          EOF
+      # ✅ Deploy all modules from the aggregator/root pom
+      - name: Deploy to GitHub Packages
+        run: mvn -B -U -DskipTests deploy
         env:
-          # Best practice: use a PAT so it works across repos/orgs reliably
-          # Create secret GH_PACKAGES_TOKEN with: write:packages, read:packages
-          GH_PACKAGES_USERNAME: ${{ github.actor }}
-          GH_PACKAGES_TOKEN: ${{ secrets.GH_PACKAGES_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build + Publish (deploy)
-        run: |
-          mvn -B -U -DskipTests deploy \
-            -DaltDeploymentRepository=github::default::https://maven.pkg.github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}
