@@ -51,3 +51,4 @@ secrets/
 *.tmp
 *.swp
 *.swo
+*.jar
