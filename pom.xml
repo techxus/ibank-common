@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Root aggregator + single version source (revision) -->
+<!-- Reactor aggregator only -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-
     <groupId>com.ibank</groupId>
     <artifactId>ibank-common</artifactId>
     <version>${revision}</version>
     <packaging>pom</packaging>
     <name>ibank-common</name>
-    <description>Root multi-module aggregator for ibank shared artifacts</description>
+    <description>Reactor aggregator for ibank shared artifacts</description>
+
+    <properties>
+        <revision>1.0.12</revision>
+    </properties>
 
     <modules>
         <module>ibank-parent</module>
@@ -19,110 +22,9 @@
         <module>ibank-starter</module>
     </modules>
 
-    <repositories>
-        <repository>
-            <id>splunk-artifactory</id>
-            <url>https://splunk.jfrog.io/splunk/ext-releases-local/</url>
-        </repository>
-    </repositories>
-
-    <properties>
-        <!-- ✅ Change ONLY this line for new release: 1.0.10, 1.0.11, ... -->
-        <revision>1.0.10</revision>
-        <java.version>17</java.version>
-        <lombok.version>1.18.32</lombok.version>
-        <splunk.version>1.11.8</splunk.version>
-        <aws.msk.iam.version>2.0.3</aws.msk.iam.version>
-
-        <maven.compiler.plugin.version>3.11.0</maven.compiler.plugin.version>
-        <flatten.maven.plugin.version>1.6.0</flatten.maven.plugin.version>
-    </properties>
-
-    <!-- ✅ Versions shared across the reactor -->
-    <dependencyManagement>
-        <dependencies>
-
-            <dependency>
-                <groupId>org.projectlombok</groupId>
-                <artifactId>lombok</artifactId>
-                <version>${lombok.version}</version>
-                <scope>provided</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>com.splunk.logging</groupId>
-                <artifactId>splunk-library-javalogging</artifactId>
-                <version>${splunk.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>software.amazon.msk</groupId>
-                <artifactId>aws-msk-iam-auth</artifactId>
-                <version>${aws.msk.iam.version}</version>
-            </dependency>
-
-        </dependencies>
-    </dependencyManagement>
-
+    <!-- Skip deploy for aggregator -->
     <build>
-        <pluginManagement>
-            <plugins>
-
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <version>${maven.compiler.plugin.version}</version>
-                    <configuration>
-                        <release>${java.version}</release>
-                        <annotationProcessorPaths>
-                            <path>
-                                <groupId>org.projectlombok</groupId>
-                                <artifactId>lombok</artifactId>
-                                <version>${lombok.version}</version>
-                            </path>
-                        </annotationProcessorPaths>
-                    </configuration>
-                </plugin>
-
-                <!-- ✅ CRITICAL: publish flattened POMs so ${revision} is resolved for consumers -->
-                <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>flatten-maven-plugin</artifactId>
-                    <version>${flatten.maven.plugin.version}</version>
-                    <configuration>
-                        <!-- resolves ${revision}, ${sha1}, ${changelist} -->
-                        <flattenMode>resolveCiFriendliesOnly</flattenMode>
-                        <updatePomFile>true</updatePomFile>
-                    </configuration>
-                    <executions>
-                        <execution>
-                            <id>flatten</id>
-                            <phase>process-resources</phase>
-                            <goals>
-                                <goal>flatten</goal>
-                            </goals>
-                        </execution>
-                        <execution>
-                            <id>flatten-clean</id>
-                            <phase>clean</phase>
-                            <goals>
-                                <goal>clean</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-
-            </plugins>
-        </pluginManagement>
-
-        <!-- Make sure flatten runs even if modules don't declare it explicitly -->
         <plugins>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>flatten-maven-plugin</artifactId>
-            </plugin>
-
-            <!-- Skip deploy ONLY for this aggregator -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-deploy-plugin</artifactId>
@@ -134,5 +36,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>
