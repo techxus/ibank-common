@@ -7,7 +7,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.ibank</groupId>
     <artifactId>ibank-common</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
     <packaging>pom</packaging>
     <name>ibank-common</name>
     <description>Root multi-module aggregator for ibank shared artifacts</description>
