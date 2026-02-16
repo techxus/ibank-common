@@ -8,7 +8,7 @@
     <parent>
         <groupId>com.ibank</groupId>
         <artifactId>ibank-parent</artifactId>
-        <version>1.0.4</version>
+        <version>1.0.5</version>
         <relativePath>../ibank-parent/pom.xml</relativePath>
     </parent>
 
