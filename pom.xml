@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Reactor aggregator only -->
+<!-- Root aggregator -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -7,14 +7,10 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.ibank</groupId>
     <artifactId>ibank-common</artifactId>
-    <version>${revision}</version>
+    <version>1.0.15</version>
     <packaging>pom</packaging>
     <name>ibank-common</name>
-    <description>Reactor aggregator for ibank shared artifacts</description>
-
-    <properties>
-        <revision>1.0.12</revision>
-    </properties>
+    <description>Root multi-module aggregator for ibank shared artifacts</description>
 
     <modules>
         <module>ibank-parent</module>
@@ -22,7 +18,6 @@
         <module>ibank-starter</module>
     </modules>
 
-    <!-- Skip deploy for aggregator -->
     <build>
         <plugins>
             <plugin>
@@ -36,4 +31,5 @@
             </plugin>
         </plugins>
     </build>
+
 </project>

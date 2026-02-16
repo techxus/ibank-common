@@ -8,16 +8,13 @@
     <parent>
         <groupId>com.ibank</groupId>
         <artifactId>ibank-parent</artifactId>
-        <version>${revision}</version>
+        <version>1.0.15</version>
         <relativePath>../ibank-parent/pom.xml</relativePath>
     </parent>
 
-    <groupId>com.ibank</groupId>
     <artifactId>ibank-starter</artifactId>
-    <version>${revision}</version>
+    <version>1.0.15</version>
     <packaging>jar</packaging>
-    <name>ibank-starter</name>
-    <description>Shared starter for ibank services (common runtime deps + shared config)</description>
 
     <dependencies>
 
