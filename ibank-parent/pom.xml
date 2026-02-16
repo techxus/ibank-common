@@ -46,13 +46,11 @@
             <dependency>
                 <groupId>com.ibank</groupId>
                 <artifactId>ibank-starter</artifactId>
-                <version>1.0.18</version>
             </dependency>
 
             <dependency>
                 <groupId>com.ibank</groupId>
                 <artifactId>ibank-model</artifactId>
-                <version>1.0.18</version>
             </dependency>
 
             <!-- Lombok -->
