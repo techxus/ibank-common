@@ -18,17 +18,6 @@
     <name>ibank-common</name>
     <description>Root multi-module aggregator for ibank shared artifacts</description>
 
-    <!-- ✅ Required so `mvn deploy` knows where to publish -->
-    <distributionManagement>
-        <repository>
-            <!-- must match setup-java server-id -->
-            <id>github</id>
-            <name>GitHub Packages</name>
-            <!-- owner/repo MUST be the repo that hosts packages (this repo) -->
-            <url>https://maven.pkg.github.com/techxus/ibank-common</url>
-        </repository>
-    </distributionManagement>
-
     <modules>
         <module>ibank-parent</module>
         <module>ibank-model</module>
