@@ -34,7 +34,7 @@ jobs:
           server-username: GITHUB_ACTOR
           server-password: GITHUB_TOKEN
 
-      - name: Deploy to GitHub Packages
-        run: mvn -B -U -DskipTests deploy
+      - name: Deploy to GitHub Packages (root reactor)
+        run: mvn -B -U -DskipTests deploy -f pom.xml
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

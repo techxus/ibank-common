@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Root aggregator + single-version root -->
+<!-- Root parent + aggregator for ibank shared artifacts -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
 
-    <!-- ✅ One Spring Boot parent for the whole reactor -->
+    <!-- ✅ Spring Boot parent for the whole reactor -->
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
@@ -18,19 +18,9 @@
     <artifactId>ibank-common</artifactId>
     <version>${revision}</version>
     <packaging>pom</packaging>
+
     <name>ibank-common</name>
-    <description>Root multi-module aggregator for ibank shared artifacts</description>
-
-    <properties>
-        <!-- ✅ Change ONLY this to release 1.0.6, 1.0.7, ... -->
-        <revision>1.0.6</revision>
-        <java.version>17</java.version>
-        <lombok.version>1.18.32</lombok.version>
-        <splunk.version>1.11.8</splunk.version>
-        <aws.msk.iam.version>2.0.3</aws.msk.iam.version>
-
-        <maven.compiler.plugin.version>3.11.0</maven.compiler.plugin.version>
-    </properties>
+    <description>Root multi-module parent + aggregator for ibank shared artifacts</description>
 
     <modules>
         <module>ibank-parent</module>
@@ -38,19 +28,109 @@
         <module>ibank-starter</module>
     </modules>
 
-    <!-- ✅ Skip deploy ONLY for this aggregator POM -->
+    <repositories>
+        <repository>
+            <id>splunk-artifactory</id>
+            <url>https://splunk.jfrog.io/splunk/ext-releases-local/</url>
+        </repository>
+    </repositories>
+
+    <properties>
+        <!-- ✅ Change ONLY this to release 1.0.6, 1.0.7, ... -->
+        <revision>1.0.8</revision>
+
+        <!-- Java baseline -->
+        <java.version>17</java.version>
+
+        <!-- Versions NOT managed by Spring Boot BOM -->
+        <lombok.version>1.18.32</lombok.version>
+        <splunk.version>1.11.8</splunk.version>
+        <aws.msk.iam.version>2.0.3</aws.msk.iam.version>
+
+        <!-- Plugin versions -->
+        <maven.compiler.plugin.version>3.11.0</maven.compiler.plugin.version>
+    </properties>
+
+    <!-- ✅ Centralized versions for ALL modules (fixes your Splunk missing version error) -->
+    <dependencyManagement>
+        <dependencies>
+
+            <!-- ibank shared modules -->
+            <dependency>
+                <groupId>com.ibank</groupId>
+                <artifactId>ibank-starter</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.ibank</groupId>
+                <artifactId>ibank-model</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <!-- Lombok -->
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
+                <scope>provided</scope>
+            </dependency>
+
+            <!-- Splunk logging -->
+            <dependency>
+                <groupId>com.splunk.logging</groupId>
+                <artifactId>splunk-library-javalogging</artifactId>
+                <version>${splunk.version}</version>
+            </dependency>
+
+            <!-- AWS MSK IAM -->
+            <dependency>
+                <groupId>software.amazon.msk</groupId>
+                <artifactId>aws-msk-iam-auth</artifactId>
+                <version>${aws.msk.iam.version}</version>
+            </dependency>
+
+        </dependencies>
+    </dependencyManagement>
+
+    <!-- ✅ Centralized plugins -->
     <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-deploy-plugin</artifactId>
-                <version>3.1.2</version>
-                <inherited>false</inherited>
-                <configuration>
-                    <skip>true</skip>
-                </configuration>
-            </plugin>
-        </plugins>
+        <pluginManagement>
+            <plugins>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${maven.compiler.plugin.version}</version>
+                    <configuration>
+                        <source>${java.version}</source>
+                        <target>${java.version}</target>
+                        <annotationProcessorPaths>
+                            <path>
+                                <groupId>org.projectlombok</groupId>
+                                <artifactId>lombok</artifactId>
+                                <version>${lombok.version}</version>
+                            </path>
+                        </annotationProcessorPaths>
+                    </configuration>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                </plugin>
+
+            </plugins>
+        </pluginManagement>
     </build>
+
+    <!-- ✅ GitHub Packages deploy target (inherited by children) -->
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub Packages</name>
+            <url>https://maven.pkg.github.com/techxus/ibank-common</url>
+        </repository>
+    </distributionManagement>
 
 </project>
