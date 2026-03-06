@@ -61,19 +61,19 @@
                 <scope>provided</scope>
             </dependency>
 
-            <!-- Splunk logging -->
-            <dependency>
-                <groupId>com.splunk.logging</groupId>
-                <artifactId>splunk-library-javalogging</artifactId>
-                <version>${splunk.version}</version>
-            </dependency>
+<!--            &lt;!&ndash; Splunk logging &ndash;&gt;-->
+<!--            <dependency>-->
+<!--                <groupId>com.splunk.logging</groupId>-->
+<!--                <artifactId>splunk-library-javalogging</artifactId>-->
+<!--                <version>${splunk.version}</version>-->
+<!--            </dependency>-->
 
-            <!-- AWS MSK IAM -->
-            <dependency>
-                <groupId>software.amazon.msk</groupId>
-                <artifactId>aws-msk-iam-auth</artifactId>
-                <version>${aws.msk.iam.version}</version>
-            </dependency>
+<!--            &lt;!&ndash; AWS MSK IAM &ndash;&gt;-->
+<!--            <dependency>-->
+<!--                <groupId>software.amazon.msk</groupId>-->
+<!--                <artifactId>aws-msk-iam-auth</artifactId>-->
+<!--                <version>${aws.msk.iam.version}</version>-->
+<!--            </dependency>-->
 
         </dependencies>
     </dependencyManagement>
