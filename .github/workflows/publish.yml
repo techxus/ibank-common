@@ -9,7 +9,6 @@ on:
       - "ibank-model/**"
       - "ibank-starter/**"
       - ".github/workflows/publish.yml"
-
   workflow_dispatch:
 
 permissions:
