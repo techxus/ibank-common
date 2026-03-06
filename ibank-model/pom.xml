@@ -13,7 +13,7 @@
     </parent>
 
     <artifactId>ibank-model</artifactId>
-    <version>1.0.20</version>
+    <version>1.0.22</version>
     <packaging>jar</packaging>
 
     <dependencies>
