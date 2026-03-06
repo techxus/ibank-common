@@ -13,7 +13,7 @@
     </parent>
 
     <artifactId>ibank-starter</artifactId>
-    <version>1.0.22</version>
+    <version>1.0.25</version>
     <packaging>jar</packaging>
 
     <repositories>
