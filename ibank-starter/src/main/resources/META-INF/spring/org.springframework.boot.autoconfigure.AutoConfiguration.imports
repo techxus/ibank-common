@@ -1,3 +1,2 @@
-com.ibank.starter.security.JwtAutoConfiguration
-com.ibank.starter.redis.RedisAutoConfiguration
+
 
