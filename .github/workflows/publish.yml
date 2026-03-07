@@ -55,14 +55,14 @@ jobs:
         id: discover
         shell: bash
         run: |
-          REPOS=$(curl --fail --silent \
+          REPOS=$(curl --fail --silent --show-error \
             -H "Authorization: token ${PAT}" \
             -H "Accept: application/vnd.github+json" \
-            "https://api.github.com/orgs/${OWNER}/repos?per_page=100" \
+            "https://api.github.com/users/${OWNER}/repos?per_page=100" \
             | jq -c '[.[].name | select(test("^ibank-.*-service$"))]')
 
           echo "repos=${REPOS}" >> "$GITHUB_OUTPUT"
-          echo "${REPOS}"
+          echo "Discovered repos: ${REPOS}"
 
   trigger-services:
     runs-on: ubuntu-latest
