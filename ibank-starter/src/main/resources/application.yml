@@ -53,30 +53,30 @@ spring:
   # ------------------------------------------------------------
   # REDIS cache
   # ------------------------------------------------------------
-  cache:
-    type: redis
-    redis:
-      time-to-live: 10m
-      cache-null-values: false
-      use-key-prefix: true
-      key-prefix: "${spring.application.name}::"
-
-  data:
-    redis:
-      host: ${SPRING_DATA_REDIS_HOST:}
-      port: ${SPRING_DATA_REDIS_PORT:6379}
-      password: ${SPRING_DATA_REDIS_PASSWORD:}
-      ssl:
-        enabled: ${SPRING_DATA_REDIS_SSL_ENABLED:true}
-      timeout: 2s
-
-      lettuce:
-        pool:
-          enabled: true
-          max-active: 32
-          max-idle: 16
-          min-idle: 4
-          max-wait: 2s
+#  cache:
+#    type: redis
+#    redis:
+#      time-to-live: 10m
+#      cache-null-values: false
+#      use-key-prefix: true
+#      key-prefix: "${spring.application.name}::"
+#
+#  data:
+#    redis:
+#      host: ${SPRING_DATA_REDIS_HOST:}
+#      port: ${SPRING_DATA_REDIS_PORT:6379}
+#      password: ${SPRING_DATA_REDIS_PASSWORD:}
+#      ssl:
+#        enabled: ${SPRING_DATA_REDIS_SSL_ENABLED:true}
+#      timeout: 2s
+#
+#      lettuce:
+#        pool:
+#          enabled: true
+#          max-active: 32
+#          max-idle: 16
+#          min-idle: 4
+#          max-wait: 2s
 
 
 # ============================================================
@@ -100,7 +100,8 @@ management:
         enabled: true
       group:
         readiness:
-          include: readinessState,db,redis,kafka
+          # include: readinessState,db,redis,kafka
+          include: readinessState
         liveness:
           include: livenessState
 
