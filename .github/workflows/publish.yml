@@ -48,44 +48,40 @@ jobs:
       matrix:
         repo:
           - user-service
-          - reporting-service
 
     env:
-      GH_TOKEN: ${{ secrets.GHA_PAT }}
       OWNER: ${{ github.repository_owner }}
       VERSION: ${{ needs.publish.outputs.version }}
+      PAT: ${{ secrets.GHA_PAT }}
 
     steps:
-      - name: Verify gh auth
-        run: gh auth status
-
       - name: Update IBANK_VERSION variable
         shell: bash
         run: |
           REPO="${{ matrix.repo }}"
 
-          gh api \
-            --method PATCH \
+          curl --fail --silent --show-error \
+            -X PATCH \
+            -H "Authorization: Bearer ${PAT}" \
             -H "Accept: application/vnd.github+json" \
-            "/repos/${OWNER}/${REPO}/actions/variables/IBANK_VERSION" \
-            -f name="IBANK_VERSION" \
-            -f value="${VERSION}" \
+            "https://api.github.com/repos/${OWNER}/${REPO}/actions/variables/IBANK_VERSION" \
+            -d "{\"name\":\"IBANK_VERSION\",\"value\":\"${VERSION}\"}" \
           || \
-          gh api \
-            --method POST \
+          curl --fail --silent --show-error \
+            -X POST \
+            -H "Authorization: Bearer ${PAT}" \
             -H "Accept: application/vnd.github+json" \
-            "/repos/${OWNER}/${REPO}/actions/variables" \
-            -f name="IBANK_VERSION" \
-            -f value="${VERSION}"
+            "https://api.github.com/repos/${OWNER}/${REPO}/actions/variables" \
+            -d "{\"name\":\"IBANK_VERSION\",\"value\":\"${VERSION}\"}"
 
       - name: Trigger service build
         shell: bash
         run: |
           REPO="${{ matrix.repo }}"
 
-          gh api \
-            --method POST \
+          curl --fail --silent --show-error \
+            -X POST \
+            -H "Authorization: Bearer ${PAT}" \
             -H "Accept: application/vnd.github+json" \
-            "/repos/${OWNER}/${REPO}/dispatches" \
-            -f event_type="parent_updated" \
-            -f client_payload[ibank_version]="${VERSION}"
+            "https://api.github.com/repos/${OWNER}/${REPO}/dispatches" \
+            -d "{\"event_type\":\"parent_updated\",\"client_payload\":{\"ibank_version\":\"${VERSION}\"}}"
