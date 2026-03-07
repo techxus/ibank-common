@@ -1,19 +1,23 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- Root aggregator -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.ibank</groupId>
-    <artifactId>ibank-common</artifactId>
-    <version>1.0.30</version>
+    <artifactId>ibank-parent</artifactId>
+    <version>${revision}</version>
     <packaging>pom</packaging>
-    <name>ibank-common</name>
-    <description>Root multi-module aggregator for ibank shared artifacts</description>
+
+    <properties>
+        <revision>0.0.0</revision>
+        <java.version>17</java.version>
+        <spring-boot.version>3.3.1</spring-boot.version>
+        <splunk.version>1.11.8</splunk.version>
+        <lombok.version>1.18.32</lombok.version>
+        <maven.compiler.release>${java.version}</maven.compiler.release>
+    </properties>
 
     <modules>
-        <module>ibank-parent</module>
+        <module>ibank-bom</module>
         <module>ibank-model</module>
         <module>ibank-starter</module>
     </modules>
@@ -31,18 +35,57 @@
         </repository>
     </repositories>
 
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring-boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.splunk.logging</groupId>
+                <artifactId>splunk-library-javalogging</artifactId>
+                <version>${splunk.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
+                <scope>provided</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-deploy-plugin</artifactId>
-                <version>3.1.2</version>
-                <inherited>false</inherited>
-                <configuration>
-                    <skip>true</skip>
-                </configuration>
-            </plugin>
-        </plugins>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.11.0</version>
+                    <configuration>
+                        <release>${maven.compiler.release}</release>
+                    </configuration>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-deploy-plugin</artifactId>
+                    <version>3.1.2</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
     </build>
 
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub Packages</name>
+            <url>https://maven.pkg.github.com/techxus/ibank-parent</url>
+        </repository>
+    </distributionManagement>
 </project>
