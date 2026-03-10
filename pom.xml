@@ -13,6 +13,7 @@
         <spring-boot.version>3.3.1</spring-boot.version>
         <splunk.version>1.11.8</splunk.version>
         <lombok.version>1.18.32</lombok.version>
+        <aws.msk.iam.version>2.0.3</aws.msk.iam.version>
         <maven.compiler.release>${java.version}</maven.compiler.release>
     </properties>
 
